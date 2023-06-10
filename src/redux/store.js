@@ -1,12 +1,10 @@
 import { configureStore } from "@reduxjs/toolkit";
-import {  createReducer } from "@reduxjs/toolkit";
-
-const myReducer = createReducer(0, {
-
-});
+// import { tasksReducer } from "./tasksSlice";
+import { filtersReducer } from "./filtersSlice";
 
 export const store = configureStore({
   reducer: {
-    myValue: myReducer
+    // tasks: tasksReducer,
+    filters: filtersReducer,
   },
 });
