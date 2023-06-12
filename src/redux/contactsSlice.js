@@ -1,5 +1,6 @@
 import { createSlice, nanoid } from "@reduxjs/toolkit";
-
+import storage from 'redux-persist/lib/storage';
+import {persistReducer} from 'redux-persist';
 
 const contactsInitialState = [
   { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
@@ -26,17 +27,17 @@ const contactsSlice = createSlice({
       const id = action.payload;
       return state.filter(contact => contact.id !== id);
     },
-
-    // toggleCompleted(state, action) {
-    //   for (const contact of state) {
-    //     if (contact.id === action.payload) {
-    //       contact.completed = !contact.completed;
-    //       break;
-    //     }
-    //   }
-    // },
   },
 });
 
-export const { addTask, deleteContact } = contactsSlice.actions;
-export const contactsReducer = contactsSlice.reducer;
+const persistContactsConfig = {
+  key: 'contacts',
+  storage,
+  whitelist: ['contacts'],
+};
+export const persistedContactsReducer = persistReducer(
+  persistContactsConfig,
+  contactsSlice.reducer
+);
+
+export const { addContact, deleteContact } = contactsSlice.actions;
