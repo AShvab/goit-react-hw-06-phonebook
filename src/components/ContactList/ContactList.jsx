@@ -1,18 +1,8 @@
 import React from 'react';
 import ContactListItem from 'components/ContactListItem/ContactListItem';
 import PropTypes from 'prop-types';
-import { useDispatch, useSelector } from 'react-redux';
-import { deleteContact } from 'redux/contactsSlice';
-import { getContacts } from 'redux/selectors';
 
-const ContactList = () => {
-  const contacts = useSelector(getContacts);
-  const dispatch = useDispatch();
-
-  const removeContact = id => {
-    dispatch(deleteContact(id));
-  };
-
+const ContactList = ({ contacts, removeContact }) => {
   return (
     <ul>
       {Array.isArray(contacts) &&

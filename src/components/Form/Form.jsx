@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
 import { nanoid } from 'nanoid';
 import { Button, Input, LabelForm, StyledForm } from './Form.styled';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { addContact } from 'redux/contactsSlice';
+import { getContacts } from 'redux/selectors';
+import { toast } from 'react-toastify';
 
 const Form = () => {
   const dispatch = useDispatch();
+  const contacts = useSelector(getContacts);
+
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
 
@@ -23,7 +27,14 @@ const Form = () => {
 
   const handleSubmit = e => {
     e.preventDefault();
-    dispatch(addContact({ name, number }));
+    const isAdded = contacts.find(
+      contact => contact.name.toLowerCase() === name.toLowerCase()
+    );
+    if (isAdded) {
+      reset();
+      return toast.warn(`${name} is already in contacts.`);
+    }
+    dispatch(addContact({ name, number }));    
     reset();
   };
 
@@ -67,3 +78,4 @@ const Form = () => {
 };
 
 export default Form;
+
