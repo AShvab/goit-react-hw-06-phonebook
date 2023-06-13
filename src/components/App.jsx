@@ -15,52 +15,50 @@ const App = () => {
   const contacts = useSelector(getContacts);
   const filter = useSelector(getFilter);
 
-const handleAddContact = (contact) => {
-const { name } = contact;
-if (contacts.some((item) => item.name.toLowerCase() === name.toLowerCase())) {
-toast.warning(`${name} is already in contacts`);
-return;
-}
-dispatch(addContact(contact));
-};
+  const handleAddContact = contact => {
+    const { name } = contact;
+    if (contacts.some(item => item.name.toLowerCase() === name.toLowerCase())) {
+      toast.warning(`${name} is already in contacts`);
+      return;
+    }
+    dispatch(addContact(contact));
+  };
 
-const handleRemoveContact = (id) => {
-dispatch(deleteContact(id));
-};
+  const handleRemoveContact = id => {
+    dispatch(deleteContact(id));
+  };
 
-const handleSearchContact = (event) => {
-  const { value } = event.target;
-  dispatch(setFilter(value));
-};
+  const handleSearchContact = event => {
+    const { value } = event.target;
+    dispatch(setFilter(value));
+  };
 
-const getFilteredContacts = () => {
-return contacts.filter(({ name }) =>
-name.toLowerCase().includes(filter.toLowerCase())
-);
-};
+  const getFilteredContacts = () => {
+    return contacts.filter(({ name }) =>
+      name.toLowerCase().includes(filter.toLowerCase())
+    );
+  };
 
-const filteredContacts = getFilteredContacts();
+  const filteredContacts = getFilteredContacts();
 
-return (
-<Container>
-<Title>PhoneBook</Title>
-<Form onSubmit={handleAddContact} />
-<Subtitle>Contacts</Subtitle>
-<Total>Total contacts: {filteredContacts.length}</Total>
-<SearchContact searchContact={handleSearchContact} />
-{filteredContacts.length > 0 ? (
-<ContactList
-       contacts={filteredContacts}
-       removeContact={handleRemoveContact}
-     />
-) : (
-<Text>Contact list is empty</Text>
-)}
-<ToastContainer autoClose={2000} />
-</Container>
-);
+  return (
+    <Container>
+      <Title>PhoneBook</Title>
+      <Form onSubmit={handleAddContact} />
+      <Subtitle>Contacts</Subtitle>
+      <Total>Total contacts: {filteredContacts.length}</Total>
+      <SearchContact searchContact={handleSearchContact} />
+      {filteredContacts.length > 0 ? (
+        <ContactList
+          contacts={filteredContacts}
+          removeContact={handleRemoveContact}
+        />
+      ) : (
+        <Text>Contact list is empty</Text>
+      )}
+      <ToastContainer autoClose={2000} />
+    </Container>
+  );
 };
 
 export default App;
-
-
