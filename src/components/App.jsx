@@ -69,7 +69,9 @@
 
 // export default App;
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+// import { nanoid } from 'nanoid';
+// import contactsData from '../data/data.json';
 import Form from './Form';
 import ContactList from './ContactList/ContactList';
 import SearchContact from './SearchContact';
@@ -78,62 +80,61 @@ import 'react-toastify/dist/ReactToastify.css';
 import { Container, Subtitle, Text, Title, Total } from './App.styled';
 import { useSelector, useDispatch } from 'react-redux';
 import { addContact, deleteContact } from '../redux/contactsSlice';
-import { setFilter } from '../redux/filtersSlice';
-import { getContacts, getFilter } from '../redux/selectors';
 
 const App = () => {
-  const dispatch = useDispatch();
-  const contacts = useSelector(getContacts);
-  const filter = useSelector(getFilter);
+const dispatch = useDispatch();
+const contacts = useSelector((state) => state.contacts);
 
-  useEffect(() => {
-    localStorage.setItem('contacts', JSON.stringify(contacts));
-  }, [contacts]);
+const [filter, setFilter] = useState('');
 
-  const handleAddContact = contact => {
-    const { name } = contact;
-    if (contacts.some(item => item.name.toLowerCase() === name.toLowerCase())) {
-      toast.warning(`${name} is already in contacts)`);
-      return;
-    }
-    dispatch(addContact(contact));
-  };
+useEffect(() => {
+localStorage.setItem('contacts', JSON.stringify(contacts));
+}, [contacts]);
 
-  const handleRemoveContact = id => {
-    dispatch(deleteContact(id));
-  };
+const handleAddContact = (contact) => {
+const { name } = contact;
+if (contacts.some((item) => item.name.toLowerCase() === name.toLowerCase())) {
+toast.warning(`${name} is already in contacts`);
+return;
+}
+dispatch(addContact(contact));
+};
 
-  const handleSearchContact = event => {
-    const { value } = event.target;
-    dispatch(setFilter(value));
-  };
+const handleRemoveContact = (id) => {
+dispatch(deleteContact(id));
+};
 
-  const getFilteredContacts = () => {
-    return contacts.filter(({ name }) =>
-      name.toLowerCase().includes(filter.toLowerCase())
-    );
-  };
+const handleSearchContact = (event) => {
+const { value } = event.target;
+setFilter(value);
+};
 
-  const filteredContacts = getFilteredContacts();
+const getFilteredContacts = () => {
+return contacts.filter(({ name }) =>
+name.toLowerCase().includes(filter.toLowerCase())
+);
+};
 
-  return (
-    <Container>
-      <Title>PhoneBook</Title>
-      <Form onSubmit={handleAddContact} />
-      <Subtitle>Contacts</Subtitle>
-      <Total>Total contacts: {filteredContacts.length}</Total>
-      <SearchContact searchContact={handleSearchContact} />
-      {filteredContacts.length > 0 ? (
-        <ContactList
-          contacts={filteredContacts}
-          removeContact={handleRemoveContact}
-        />
-      ) : (
-        <Text>Contact list is empty</Text>
-      )}
-      <ToastContainer autoClose={2000} />
-    </Container>
-  );
+const filteredContacts = getFilteredContacts();
+
+return (
+<Container>
+<Title>PhoneBook</Title>
+<Form onSubmit={handleAddContact} />
+<Subtitle>Contacts</Subtitle>
+<Total>Total contacts: {filteredContacts.length}</Total>
+<SearchContact searchContact={handleSearchContact} />
+{filteredContacts.length > 0 ? (
+<ContactList
+       contacts={filteredContacts}
+       removeContact={handleRemoveContact}
+     />
+) : (
+<Text>Contact list is empty</Text>
+)}
+<ToastContainer autoClose={2000} />
+</Container>
+);
 };
 
 export default App;
