@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import { nanoid } from 'nanoid';
 import { Button, Input, LabelForm, StyledForm } from './Form.styled';
+import { useDispatch } from 'react-redux';
+import { addContact } from 'redux/contactsSlice';
 
-const Form = ({ onSubmit }) => {
+const Form = () => {
+  const dispatch = useDispatch();
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
 
@@ -20,7 +23,7 @@ const Form = ({ onSubmit }) => {
 
   const handleSubmit = e => {
     e.preventDefault();
-    onSubmit({ name, number });
+    dispatch(addContact({ name, number }));
     reset();
   };
 
